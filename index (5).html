@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>걷기앱 🚶</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ===== 헤더 ===== -->
+  <header class="app-header">
+    <span class="header-badge">✦ 오늘도 움직여요</span>
+    <h1 class="app-title">걷기앱 🚶</h1>
+    <p class="app-subtitle">앉아 있던 몸을 가볍게 깨워 보자!</p>
+  </header>
+
+  <!-- ===== 점수 & 레벨 카드 ===== -->
+  <section class="score-card">
+    <!-- 왼쪽: 오늘 완료 횟수 -->
+    <div class="score-block">
+      <p class="score-label">오늘 완료</p>
+      <span class="score-number" id="missionCount">0</span>
+      <p class="score-unit">회</p>
+    </div>
+    <!-- 구분선 -->
+    <div class="score-divider"></div>
+    <!-- 오른쪽: 총점 & 레벨 -->
+    <div class="score-block">
+      <p class="score-label">누적 점수</p>
+      <span class="score-number" id="totalScore">0</span>
+      <p class="score-unit">점</p>
+    </div>
+    <!-- 레벨 배지 (카드 하단 전체) -->
+    <div class="level-bar">
+      <!-- JavaScript에서 레벨 이름과 이모지를 채워 줌 -->
+      <span id="levelBadge">🌱 씨앗</span>
+      <span class="level-next" id="levelNext"></span>
+    </div>
+  </section>
+
+  <!-- ===== 카테고리 선택 칩 ===== -->
+  <div class="category-wrap">
+    <!-- 카테고리 버튼: data-cat 속성으로 JavaScript가 구분 -->
+    <button class="cat-chip active" data-cat="전체"    onclick="selectCategory(this)">전체</button>
+    <button class="cat-chip"        data-cat="교실"    onclick="selectCategory(this)">🏫 교실</button>
+    <button class="cat-chip"        data-cat="복도·계단" onclick="selectCategory(this)">🪜 복도·계단</button>
+    <button class="cat-chip"        data-cat="집"      onclick="selectCategory(this)">🏠 집</button>
+    <button class="cat-chip"        data-cat="어디서든" onclick="selectCategory(this)">💪 어디서든</button>
+  </div>
+
+  <!-- ===== 미션 카드 ===== -->
+  <section class="mission-card" id="missionCard">
+    <p class="mission-placeholder" id="missionPlaceholder">
+      카테고리를 고르고<br />미션을 뽑아 보세요! 🎲
+    </p>
+    <p class="mission-text" id="missionText" hidden></p>
+  </section>
+
+  <!-- ===== 버튼 ===== -->
+  <div class="btn-group">
+    <button class="btn btn-primary" id="drawBtn"  onclick="drawMission()">🎲 미션 뽑기</button>
+    <button class="btn btn-success" id="doneBtn"  onclick="completeMission()" disabled>✅ 미션 완료</button>
+  </div>
+
+  <!-- ===== 완료 메시지 ===== -->
+  <div class="success-msg" id="successMsg" hidden></div>
+
+  <!-- ===== 최근 완료 기록 ===== -->
+  <section class="history-section">
+    <!-- 토글 버튼: 누르면 목록이 열리고 닫힘 -->
+    <button class="history-toggle" onclick="toggleHistory()">
+      <span>📋 최근 완료 기록</span>
+      <span class="toggle-arrow" id="toggleArrow">▼</span>
+    </button>
+    <!-- 기록 목록 — 처음에는 닫혀 있음 -->
+    <ul class="history-list" id="historyList" hidden>
+      <!-- JavaScript가 <li> 항목을 여기에 추가함 -->
+    </ul>
+    <!-- 기록이 아무것도 없을 때 표시 -->
+    <p class="history-empty" id="historyEmpty" hidden>
+      아직 완료한 미션이 없어요.<br/>첫 미션에 도전해 보세요! 🚶
+    </p>
+  </section>
+
+  <!-- ===== 하단 안내문 ===== -->
+  <footer class="disclaimer">
+    이 앱은 생활습관 참고용입니다.
+  </footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
