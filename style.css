@@ -1,39 +1,66 @@
 /* =============================================
    걷기앱 — style.css
-   색상: 파란색 + 남보라색
-   디자인: 학생 친화, 모바일 우선
+   색상: 파란색 + 남보라색 / 다크모드 지원
    ============================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
 
+/* ===== 라이트 모드 변수 ===== */
 :root {
-  --indigo-dark:   #283593;
-  --indigo-main:   #5C6BC0;
-  --indigo-mid:    #7986CB;
-  --indigo-light:  #E8EAF6;
-  --blue-main:     #1E88E5;
-  --blue-dark:     #1565C0;
-  --blue-light:    #E3F2FD;
-  --text-dark:     #1A237E;
-  --text-gray:     #78909C;
-  --white:         #FFFFFF;
-  --radius-lg:     20px;
-  --radius-md:     14px;
-  --radius-sm:     10px;
-  --shadow-indigo: 0 6px 24px rgba(92, 107, 192, 0.28);
-  --shadow-card:   0 4px 16px rgba(30, 136, 229, 0.12);
+  --indigo-dark:    #283593;
+  --indigo-main:    #5C6BC0;
+  --indigo-mid:     #7986CB;
+  --indigo-light:   #E8EAF6;
+  --blue-main:      #1E88E5;
+  --blue-dark:      #1565C0;
+  --blue-light:     #E3F2FD;
+  --text-dark:      #1A237E;
+  --text-gray:      #78909C;
+  --white:          #FFFFFF;
+  --bg-body:        linear-gradient(160deg, #E8EAF6 0%, #E3F2FD 50%, #EDE7F6 100%);
+  --bg-card:        #FFFFFF;
+  --bg-history:     #FFFFFF;
+  --border-light:   #E8EAF6;
+  --border-item:    #F5F5F5;
+  --radius-lg:      20px;
+  --radius-md:      14px;
+  --shadow-indigo:  0 6px 24px rgba(92,107,192,0.28);
+  --shadow-card:    0 4px 16px rgba(30,136,229,0.12);
 }
 
+/* ===== 다크 모드 변수 (body.dark 에 적용) ===== */
+body.dark {
+  --indigo-dark:    #9FA8DA;
+  --indigo-main:    #7986CB;
+  --indigo-mid:     #9FA8DA;
+  --indigo-light:   #1A1F3C;
+  --blue-main:      #42A5F5;
+  --blue-dark:      #1E88E5;
+  --blue-light:     #0D1929;
+  --text-dark:      #E8EAF6;
+  --text-gray:      #90A4AE;
+  --white:          #1E2139;
+  --bg-body:        linear-gradient(160deg, #0F1226 0%, #111827 50%, #130F26 100%);
+  --bg-card:        #1E2139;
+  --bg-history:     #1E2139;
+  --border-light:   #2A2F52;
+  --border-item:    #252A45;
+  --shadow-indigo:  0 6px 24px rgba(0,0,0,0.5);
+  --shadow-card:    0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* ===== 기본 리셋 ===== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   font-family: 'Noto Sans KR', sans-serif;
-  background: linear-gradient(160deg, #E8EAF6 0%, #E3F2FD 50%, #EDE7F6 100%);
+  background: var(--bg-body);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 28px 16px 52px;
+  transition: background 0.35s ease; /* 다크모드 전환 시 부드럽게 */
 }
 
 .container {
@@ -45,12 +72,38 @@ body {
 }
 
 /* ===== 헤더 ===== */
-.app-header { text-align: center; padding: 4px 0 6px; }
+.app-header {
+  text-align: center;
+  padding: 4px 0 6px;
+  position: relative; /* 다크모드 버튼 절대 위치 기준 */
+}
+
+/* 다크모드 토글 버튼 */
+.dark-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 2px solid var(--border-light);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s, border-color 0.25s, transform 0.15s;
+  box-shadow: var(--shadow-card);
+}
+
+.dark-toggle:hover { transform: scale(1.1); }
+.dark-toggle:active { transform: scale(0.95); }
 
 .header-badge {
   display: inline-block;
   background: var(--indigo-main);
-  color: var(--white);
+  color: #fff;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 1px;
@@ -69,28 +122,35 @@ body {
   letter-spacing: -1px;
 }
 
-.app-subtitle {
-  margin-top: 6px;
+/* 오늘 날짜 표시 */
+.today-date {
+  margin-top: 8px;
   font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--indigo-main);
+  letter-spacing: 0.3px;
+}
+
+.app-subtitle {
+  margin-top: 4px;
+  font-size: 0.85rem;
   color: var(--text-gray);
 }
 
 /* ===== 점수 & 레벨 카드 ===== */
 .score-card {
   background: linear-gradient(135deg, var(--indigo-main) 0%, var(--blue-main) 100%);
-  color: var(--white);
+  color: #fff;
   border-radius: var(--radius-lg);
   padding: 22px 24px 0;
   box-shadow: var(--shadow-indigo);
   position: relative;
   overflow: hidden;
-  display: flex;          /* 두 블록을 가로로 배치 */
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0;
 }
 
-/* 장식 원 */
 .score-card::before {
   content: "";
   position: absolute;
@@ -101,18 +161,13 @@ body {
   pointer-events: none;
 }
 
-/* 횟수 / 점수 블록 */
 .score-block {
   flex: 1;
   text-align: center;
   padding-bottom: 20px;
 }
 
-.score-label {
-  font-size: 0.8rem;
-  opacity: 0.85;
-  font-weight: 500;
-}
+.score-label { font-size: 0.8rem; opacity: 0.85; font-weight: 500; }
 
 .score-number {
   display: block;
@@ -120,14 +175,13 @@ body {
   font-weight: 900;
   line-height: 1.1;
   transition: transform 0.2s ease;
+  position: relative;
+  z-index: 1;
 }
 
-/* 숫자 팝 애니메이션 클래스 */
 .score-number.pop { transform: scale(1.28); }
-
 .score-unit { font-size: 0.9rem; opacity: 0.8; }
 
-/* 세로 구분선 */
 .score-divider {
   width: 1px;
   height: 60px;
@@ -135,10 +189,9 @@ body {
   align-self: center;
 }
 
-/* 레벨 바 — 카드 하단 전체 너비 */
 .level-bar {
   width: 100%;
-  background: rgba(0,0,0,0.18);
+  background: rgba(0,0,0,0.2);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   padding: 9px 20px;
   display: flex;
@@ -148,23 +201,15 @@ body {
   font-weight: 700;
 }
 
-.level-next {
-  font-size: 0.75rem;
-  opacity: 0.8;
-  font-weight: 400;
-}
+.level-next { font-size: 0.75rem; opacity: 0.8; font-weight: 400; }
 
 /* ===== 카테고리 칩 ===== */
-.category-wrap {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;        /* 칩이 많으면 줄바꿈 */
-}
+.category-wrap { display: flex; gap: 8px; flex-wrap: wrap; }
 
 .cat-chip {
   padding: 7px 14px;
-  border: 2px solid var(--indigo-light);
-  background: var(--white);
+  border: 2px solid var(--border-light);
+  background: var(--bg-card);
   color: var(--text-gray);
   border-radius: 20px;
   font-family: 'Noto Sans KR', sans-serif;
@@ -175,22 +220,18 @@ body {
   white-space: nowrap;
 }
 
-.cat-chip:hover {
-  border-color: var(--indigo-main);
-  color: var(--indigo-main);
-}
+.cat-chip:hover { border-color: var(--indigo-main); color: var(--indigo-main); }
 
-/* 선택된 칩 */
 .cat-chip.active {
   background: var(--indigo-main);
   border-color: var(--indigo-main);
-  color: var(--white);
+  color: #fff;
   box-shadow: 0 3px 10px rgba(92,107,192,0.35);
 }
 
 /* ===== 미션 카드 ===== */
 .mission-card {
-  background: var(--white);
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: 30px 24px;
   min-height: 160px;
@@ -199,8 +240,8 @@ body {
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-card);
-  border-top: 5px solid var(--indigo-light);
-  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  border-top: 5px solid var(--border-light);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, background 0.35s ease;
   position: relative;
   overflow: hidden;
 }
@@ -242,10 +283,7 @@ body {
 }
 
 /* ===== 버튼 ===== */
-.btn-group {
-  display: flex;
-  gap: 12px;
-}
+.btn-group { display: flex; gap: 12px; }
 
 .btn {
   flex: 1;
@@ -263,14 +301,14 @@ body {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--indigo-main), var(--indigo-dark));
-  color: var(--white);
+  color: #fff;
   box-shadow: 0 4px 14px rgba(92,107,192,0.4);
 }
 .btn-primary:hover { box-shadow: 0 6px 18px rgba(92,107,192,0.55); }
 
 .btn-success {
   background: linear-gradient(135deg, var(--blue-main), var(--blue-dark));
-  color: var(--white);
+  color: #fff;
   box-shadow: 0 4px 14px rgba(30,136,229,0.35);
 }
 .btn-success:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(30,136,229,0.5); }
@@ -296,15 +334,15 @@ body {
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* ===== 최근 완료 기록 섹션 ===== */
+/* ===== 기록 섹션 ===== */
 .history-section {
-  background: var(--white);
+  background: var(--bg-history);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   overflow: hidden;
+  transition: background 0.35s ease;
 }
 
-/* 기록 토글 버튼 */
 .history-toggle {
   width: 100%;
   background: none;
@@ -321,7 +359,7 @@ body {
   transition: background 0.15s;
 }
 
-.history-toggle:hover { background: var(--indigo-light); }
+.history-toggle:hover { background: var(--border-light); }
 
 .toggle-arrow {
   font-size: 0.75rem;
@@ -329,25 +367,22 @@ body {
   transition: transform 0.25s ease;
 }
 
-/* 열렸을 때 화살표 회전 */
 .toggle-arrow.open { transform: rotate(180deg); }
 
-/* 기록 목록 */
 .history-list {
   list-style: none;
-  border-top: 1px solid var(--indigo-light);
-  max-height: 260px;      /* 스크롤 영역 */
+  border-top: 1px solid var(--border-light);
+  max-height: 260px;
   overflow-y: auto;
 }
 
-/* 개별 기록 항목 */
 .history-list li {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 10px;
   padding: 12px 20px;
-  border-bottom: 1px solid #F5F5F5;
+  border-bottom: 1px solid var(--border-item);
   animation: fadeIn 0.25s ease;
 }
 
@@ -358,7 +393,6 @@ body {
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* 기록 미션 텍스트 */
 .hist-text {
   font-size: 0.83rem;
   color: var(--text-dark);
@@ -367,7 +401,6 @@ body {
   flex: 1;
 }
 
-/* 기록 시간·점수 */
 .hist-meta {
   display: flex;
   flex-direction: column;
@@ -376,25 +409,16 @@ body {
   flex-shrink: 0;
 }
 
-.hist-time {
-  font-size: 0.72rem;
-  color: var(--text-gray);
-}
+.hist-time { font-size: 0.72rem; color: var(--text-gray); }
+.hist-pts  { font-size: 0.75rem; font-weight: 700; color: var(--indigo-main); }
 
-.hist-pts {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--indigo-main);
-}
-
-/* 기록 없음 안내 */
 .history-empty {
   padding: 20px;
   text-align: center;
   font-size: 0.85rem;
   color: var(--text-gray);
   line-height: 1.7;
-  border-top: 1px solid var(--indigo-light);
+  border-top: 1px solid var(--border-light);
 }
 
 /* ===== 하단 안내문 ===== */
@@ -408,9 +432,9 @@ body {
 
 /* ===== 반응형 ===== */
 @media (max-width: 360px) {
-  .app-title     { font-size: 1.7rem; }
-  .score-number  { font-size: 2.6rem; }
-  .btn           { font-size: 0.88rem; padding: 14px 4px; }
-  .cat-chip      { font-size: 0.76rem; padding: 6px 10px; }
-  .mission-text  { font-size: 1rem; }
+  .app-title    { font-size: 1.7rem; }
+  .score-number { font-size: 2.6rem; }
+  .btn          { font-size: 0.88rem; padding: 14px 4px; }
+  .cat-chip     { font-size: 0.76rem; padding: 6px 10px; }
+  .mission-text { font-size: 1rem; }
 }
