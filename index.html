@@ -10,17 +10,29 @@
 
 <div class="container">
 
+  <!-- ===== 초기화 확인 모달 ===== -->
+  <div class="modal-overlay" id="resetModal" hidden>
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <h2 class="modal-title">정말 초기화할까요?</h2>
+      <p class="modal-desc">점수, 기록, 배지, 스트릭이<br>모두 삭제되고 되돌릴 수 없어요.</p>
+      <div class="modal-buttons">
+        <button class="modal-btn modal-btn-cancel"  onclick="closeResetModal()">취소</button>
+        <button class="modal-btn modal-btn-confirm" onclick="confirmReset()">초기화</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== 헤더 ===== -->
   <header class="app-header">
-    <!-- 다크모드 토글 버튼 (우측 상단) -->
+    <!-- 다크모드 버튼 (오른쪽) -->
     <button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="다크모드 전환">
       <span id="darkIcon">🌙</span>
     </button>
-
+    <!-- 초기화 버튼 (다크모드 버튼 바로 왼쪽) -->
+    <button class="reset-toggle" onclick="openResetModal()" title="데이터 초기화">🔄</button>
     <span class="header-badge">✦ 오늘도 움직여요</span>
     <h1 class="app-title">걷기앱 🚶</h1>
-
-    <!-- 오늘 날짜 표시 — JavaScript가 채워 줌 -->
     <p class="today-date" id="todayDate"></p>
     <p class="app-subtitle">앉아 있던 몸을 가볍게 깨워 보자!</p>
   </header>
@@ -44,13 +56,50 @@
     </div>
   </section>
 
+  <!-- ===== 스트릭 & 목표 설정 행 ===== -->
+  <div class="streak-goal-row">
+
+    <!-- 연속 걷기 스트릭 -->
+    <div class="streak-card">
+      <div class="streak-fire" id="streakFire">🔥</div>
+      <div class="streak-count" id="streakCount">0</div>
+      <div class="streak-label">일 연속 달성</div>
+      <div class="streak-sub" id="streakSub">오늘 미션 완료 시 시작!</div>
+    </div>
+
+    <!-- 오늘 목표 설정 -->
+    <div class="goal-card">
+      <div class="goal-label">오늘의 목표</div>
+      <div class="goal-ring-wrap">
+        <svg class="goal-ring" viewBox="0 0 56 56">
+          <circle class="goal-ring-bg"   cx="28" cy="28" r="25"/>
+          <circle class="goal-ring-fill" cx="28" cy="28" r="25" id="goalRingFill"/>
+        </svg>
+        <div class="goal-ring-text" id="goalRingText">0/3</div>
+      </div>
+      <div class="goal-controls">
+        <button class="goal-btn" onclick="changeGoal(-1)">−</button>
+        <span class="goal-value" id="goalValue">목표: 3회</span>
+        <button class="goal-btn" onclick="changeGoal(+1)">+</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 난이도 안내 범례 ===== -->
+  <div class="diff-legend">
+    <span class="diff-badge diff-easy">🟢 쉬움 +10점</span>
+    <span class="diff-badge diff-mid" >🟡 보통 +15점</span>
+    <span class="diff-badge diff-hard">🔵 어려움 +20점</span>
+  </div>
+
   <!-- ===== 카테고리 선택 칩 ===== -->
   <div class="category-wrap">
-    <button class="cat-chip active" data-cat="전체"     onclick="selectCategory(this)">전체</button>
-    <button class="cat-chip"        data-cat="교실"     onclick="selectCategory(this)">🏫 교실</button>
+    <button class="cat-chip active" data-cat="전체"      onclick="selectCategory(this)">전체</button>
+    <button class="cat-chip"        data-cat="교실"      onclick="selectCategory(this)">🏫 교실</button>
     <button class="cat-chip"        data-cat="복도·계단" onclick="selectCategory(this)">🪜 복도·계단</button>
-    <button class="cat-chip"        data-cat="집"       onclick="selectCategory(this)">🏠 집</button>
-    <button class="cat-chip"        data-cat="어디서든" onclick="selectCategory(this)">💪 어디서든</button>
+    <button class="cat-chip"        data-cat="집"        onclick="selectCategory(this)">🏠 집</button>
+    <button class="cat-chip"        data-cat="어디서든"  onclick="selectCategory(this)">💪 어디서든</button>
   </div>
 
   <!-- ===== 미션 카드 ===== -->
@@ -58,6 +107,7 @@
     <p class="mission-placeholder" id="missionPlaceholder">
       카테고리를 고르고<br />미션을 뽑아 보세요! 🎲
     </p>
+    <span class="diff-badge" id="diffBadge" hidden></span>
     <p class="mission-text" id="missionText" hidden></p>
   </section>
 
@@ -69,6 +119,31 @@
 
   <!-- ===== 완료 메시지 ===== -->
   <div class="success-msg" id="successMsg" hidden></div>
+
+  <!-- ===== 공유 문구 만들기 ===== -->
+  <section class="share-section">
+    <button class="history-toggle" onclick="toggleShare()">
+      <span>📢 공유 문구 만들기</span>
+      <span class="toggle-arrow" id="shareArrow">▼</span>
+    </button>
+    <div class="share-body" id="shareBody" hidden>
+      <textarea class="share-text" id="shareText" readonly></textarea>
+      <div class="share-buttons">
+        <button class="btn btn-share-copy"  onclick="copyShare()">📋 복사하기</button>
+        <button class="btn btn-share-native" id="nativeShareBtn" onclick="nativeShare()">🔗 공유하기</button>
+      </div>
+      <p class="share-hint" id="shareCopied" hidden>✅ 클립보드에 복사됐어요!</p>
+    </div>
+  </section>
+
+  <!-- ===== 배지 모음 ===== -->
+  <section class="badge-section">
+    <button class="history-toggle" onclick="toggleBadges()">
+      <span>🏅 내 배지 모음</span>
+      <span class="toggle-arrow" id="badgeArrow">▼</span>
+    </button>
+    <div class="badge-grid" id="badgeGrid" hidden></div>
+  </section>
 
   <!-- ===== 최근 완료 기록 ===== -->
   <section class="history-section">
@@ -83,9 +158,7 @@
   </section>
 
   <!-- ===== 하단 안내문 ===== -->
-  <footer class="disclaimer">
-    이 앱은 생활습관 참고용입니다.
-  </footer>
+  <footer class="disclaimer">이 앱은 생활습관 참고용입니다.</footer>
 
 </div>
 
